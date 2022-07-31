@@ -87,3 +87,8 @@
       shell: "chmod +x rustinstall.sh "
       when: ansible_architecture == "x86_64"
 
+    - name: Creating folders
+      shell: "mkdir {{ item }}"
+      with_items:
+        - Projects
+        - Workspace
