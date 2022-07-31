@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE khotnewstuff3>
+<hotnewstuffregistry>
+ <stuff category="112">
+  <name>Flat Remix KDE Blue Colors</name>
+  <providerid>https://api.kde-look.org/ocs/v1/</providerid>
+  <author>daniruiz06</author>
+  <homepage>https://store.kde.org/p/1304623</homepage>
+  <licence></licence>
+  <version>1.4</version>
+  <rating>68</rating>
+  <downloads>11658</downloads>
+  <installedfile>/home/squirrel/.local/share/color-schemes/FlatRemixBlueDarkest.colors</installedfile>
+  <installedfile>/home/squirrel/.local/share/color-schemes/FlatRemixBlueDark.colors</installedfile>
+  <installedfile>/home/squirrel/.local/share/color-schemes/FlatRemixBlue.colors</installedfile>
+  <id>1304623</id>
+  <releasedate>2020-02-11</releasedate>
+  <summary>&lt;h4>&lt;br />
+Web Page: &lt;strong>&lt;a href="https://drasite.com/flat-remix-kde" target="_blank" rel="nofollow">drasite.com/flat-remix-kde&lt;/a>&lt;/strong>&lt;br />
+&lt;img src="https://opendesktop.org/theme/flatui/img/email3.png" alt="email3" />  &lt;strong>&lt;a href="https://twitter.com/dani_ruiz24" target="_blank"...</summary>
+  <changelog></changelog>
+  <preview>https://images.pling.com/cache/100x100-0/img/00/00/36/00/71/1304623/5aff3e32955cf969556aa4d083e2298d9e9f.png</preview>
+  <previewBig>https://images.pling.com/cache/770x540-0/img/00/00/36/00/71/1304623/5aff3e32955cf969556aa4d083e2298d9e9f.png</previewBig>
+  <payload>https://dl3.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE1ODE0NDQ3MjgiLCJvIjoiMSIsInMiOiIyMzRjMTM4MGIxZWEzZDg1MWI1YTEwMDUzYzMwMDE3YWM2NGVkNTAyNTkzYjY4OWEwYTUwMGIzMGM0NmY1ZTA3YThmYTUwYTZlMjliNTJjZDJhMDMyMjdjMGMwZjFkMzZjNDljNzlkOTQyZTk2ZWU4MGIwNTgzYjk0NjFjYjg3NSIsInQiOjE2NTkxMjU5MzUsInN0ZnAiOm51bGwsInN0aXAiOiI5NC4yNTUuMTgzLjI0NiJ9.M0LRJuheMdbBozrdvJc_cO_JbHlL7cNBrWiA0MH75Fw/FlatRemixBlue-20200211175726.tar.xz</payload>
+  <tags>material,kde,gplv3,linux,remix,theme,original-product,plasma,unix,flat,colorscheme</tags>
+  <status>installed</status>
+ </stuff>
+</hotnewstuffregistry>

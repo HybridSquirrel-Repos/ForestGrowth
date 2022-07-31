@@ -1,0 +1,89 @@
+- hosts: clients
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../vault.yml
+  vars:
+    ansible_become_pass: "{{ seed_password }}"
+
+  tasks:
+
+    - name: Installing onlyoffice
+      shell: "{{ item }}"
+      with_items:
+        - sudo gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/onlyoffice.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys CB2DE8E5
+        - echo 'deb https://download.onlyoffice.com/repo/debian squeeze main' | sudo tee -a /etc/apt/sources.list.d/onlyoffice.list
+    - apt:
+        name: onlyoffice-desktopeditors
+        state: present
+        update_cache: true
+
+    - name: Installing obsidian
+      shell: "{{ item }}"
+      with_items:
+        - curl -LO https://github.com/obsidianmd/obsidian-releases/releases/download/v0.15.9/obsidian_0.15.9_amd64.deb
+        - sudo apt install ./obsidian_0.15.9_amd64.deb
+        - rm obsidian_0.15.9_amd64.deb
+
+    - name: Installing jetbrains toolbox
+      shell: "{{ item }}"
+      with_itmes:
+        - curl -LO https://www.jetbrains.com/toolbox-app/download/download-thanks.html?platform=linux
+        - tar -xvf jetbrains-toolbox-*.tar.gz
+        - ./jetbrains-toolbox-*/jetbrains-toolbox
+        - rm jetbrains-toolbox-*.tar.gz && rm jetbrains-toolbox-*/
+
+    - name: Installing .net core and MonoDevelop
+      shell: "{{ item }}"
+      with_items:
+        - wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+        - sudo dpkg -i packages-microsoft-prod.deb
+        - rm packages-microsoft-prod.deb
+        - sudo apt-get update && sudo apt-get install -y dotnet-sdk-6.0
+        - sudo apt-get install -y aspnetcore-runtime-6.0
+        - sudo apt-get install -y dotnet-runtime-6.0
+        - sudo apt install apt-transport-https dirmngr
+        - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        - echo "deb https://download.mono-project.com/repo/ubuntu vs-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-vs.list
+        - sudo apt update
+        - sudo apt-get install monodevelop
+
+    - name: Installing timeshift
+      apt:
+        name: timeshift
+        state: present
+        update_cache: true
+
+    - name: Installing brave
+      shell: "{{ item }}"
+      with_items:
+        - sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+        - echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+        - sudo apt update
+        - sudo apt install brave-browser
+
+
+
+- hosts: clients
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../vault.yml
+  vars:
+    become_user: root
+    ansible_become_pass: "{{ seed_password }}"
+
+  tasks:
+
+    - name: Changing to server directory
+      shell: "cd ../squirrel/"
+      when: ansible_architecture == "x86_64"
+
+    - name: Downloading install script for lunarvim
+      shell: "curl --proto '=https' --tlsv1.2 -O rustinstall.sh https://sh.rustup.rs"
+      when: ansible_architecture == "x86_64"
+
+    - name: Changing permission on install file
+      shell: "chmod +x rustinstall.sh "
+      when: ansible_architecture == "x86_64"
+

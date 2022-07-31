@@ -1,0 +1,113 @@
+- hosts: yggdrasil
+#  gather_facts: false
+  become: true
+  vars_files:
+    - ../vault.yml
+  vars:
+    ansible_ssh_pass: "{{ forestgrowth_password}}"
+    ansible_become_pass: "{{ forestgrowth_password }}"
+
+  tasks:
+
+    - name: Installing command utils
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: true
+      with_items:
+        - ca-certificates
+        - curl
+        - gnupg
+        - lsb-release
+        - net-tools
+
+    - name: Installing ranger
+      apt:
+        name: ranger
+        state: present
+        update_cache: true
+
+    - name: Installing neofetch
+      apt:
+        name: neofetch
+        state: present
+        update_cache: true
+    - name: Installing xclip
+      apt:
+        name: xclip
+        state: present
+        update_cache: true
+
+    - name: Installing nala
+      apt:
+        name: nala
+        state: present
+        update_cache: true
+      ignore_errors: true
+
+    - name: Installing bottom aarch64
+      shell: "{{ item }}"
+      when: ansible_architecture == "aarch64"
+      with_items:
+        - curl -LO https://github.com/ClementTsang/bottom/releases/download/nightly/bottom_aarch64-unknown-linux-gnu.deb
+        - sudo dpkg -i bottom_aarch64-unknown-linux-gnu.deb
+        - rm bottom_aarch64-unknown-linux-gnu.deb
+
+    - name: Installing bottom x86_64
+      command:
+        cmd: "curl -LO https://github.com/ClementTsang/bottom/releases/download/0.6.8/bottom_0.6.8_amd64.deb && sudo dpkg -i bottom_0.6.8_amd64.deb && rm bottom_0.6.8_amd64.deb"
+      when: ansible_architecture == "x86_64"
+
+    - name: Installing docker gpg
+      shell: "{{ item }}"
+      args:
+        warn: no
+      with_items:
+        - sudo mkdir -p /etc/apt/keyrings
+        - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
+        - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    - name: Installing docker
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: true
+      with_items:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-compose-plugin
+
+    - name: Installing neovim for aarch64 # Does not exist currently
+      shell: "echo 'Nvim does not exist'"
+      when: ansible_architecture == "aarch64"
+
+    - name: Installing neovim for x86_64
+      shell: "{{ item }}"
+      when: ansible_architecture == "x86_64"
+      with_items:
+        - curl -LO https://github.com/neovim/neovim/releases/download/v0.7.2/nvim-linux64.deb
+        - sudo apt install ./nvim-linux64.deb
+        - rm nvim-linux64.deb
+
+    - name: Installing lunarvim
+      expect:
+        command: "bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)"
+        responses:
+          '[y]es or [n]o (default: no) :': "n"
+          '[y]es or [n]o (default: no) :': "n"
+          '[y]es or [n]o (default: no) :': "y"
+      when: ansible_architecture == "x86_64"
+
+    - name: Disable hibernation
+      command: "systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target"
+
+    - name: Intalling drivers
+      shell: "sudo ubuntu-drivers install"
+      when: ansible_architecture == "x86_64"
+
+    - name: Purging snapd
+      apt:
+        name: snapd
+        state: absent
+        update_cache: true

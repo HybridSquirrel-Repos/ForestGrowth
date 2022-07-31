@@ -1,0 +1,103 @@
+- hosts: seedlings
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../vault.yml
+  vars:
+    ansible_become_pass: "{{ seed_password }}"
+    ansible_ssh_pass: "{{ seed_password }}"
+
+  tasks:
+    - name: Updating and upgrading system
+      apt:
+        update_cache: yes
+        upgrade: "yes"
+
+    - name: Disabling root login
+      command:
+        cmd: "sudo chsh -s /usr/sbin/nologin root"
+      timeout: 5
+      ignore_errors: true
+
+    - name: Dsabling root password
+      command:
+        cmd: "sudo passwd -l root"
+      timeout: 5
+      ignore_errors: true
+
+    - name: Set config file for ssh
+      copy:
+        src: /etc/ansible/configs/sshd_config
+        dest: /etc/ssh/sshd_config
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Restarting ssh
+      command:
+        cmd: "sudo systemctl restart ssh"
+      timeout: 5
+      ignore_errors: true
+
+    - name: Installing UFW
+      apt:
+        name: ufw
+        state: latest
+        update_cache: true
+
+    - name: Allow all access to tcp port 22 # Allow only certain ips 
+      ufw:
+        rule: allow
+        port: 22
+        proto: tcp
+        from_ip: "{{ hostvars[item]['ansible_default_ipv4']['address'] }}"
+      with_items: "{{ groups['seedlings'] }}"
+
+    - name: Allow all access to tcp port 80
+      ufw:
+        rule: allow
+        port: 80
+        proto: tcp
+
+    - name: Allow all access to tcp port 443
+      ufw:
+        rule: allow
+        port: 443
+        proto: tcp
+
+    - name: Enabiling UFW
+      ufw:
+        state: enabled
+
+    - name: Installing fail2ban
+      apt:
+        name: fail2ban
+        state: latest
+        update_cache: true
+
+    - name: Set config file for fail2ban
+      copy:
+        src: /etc/ansible/configs/jail.local
+        dest: /etc/fail2ban/jail.local
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Enabiling fail2ban
+      command:
+        cmd: "sudo systemctl enable fail2ban.service"
+      timeout: 5
+      ignore_errors: true
+
+    - name: Installing ClamAV
+      apt:
+        name: clamav
+        state: latest
+        update_cache: true
+
+    - name: Installing Lynis
+      apt:
+        name: lynis
+        state: latest
+        update_cache: true
+

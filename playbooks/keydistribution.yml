@@ -1,0 +1,146 @@
+# Should be runned on controller server, hostname = Yggdrasil, username = forestgrowth
+# Server and desktops should have, hostname: any tree species name, username = seed
+
+---
+- hosts: yggdrasil
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../vault.yml
+  vars:
+    ansible_become_pass: "{{ forestgrowth_password }}"
+    ansible_ssh_pass: "{{ forestgrowth_password }}"
+
+  tasks:
+    - name: Create control server user
+      user:
+        name: forestgrowth
+        password: "{{ forestgrowth_password_hash }}"
+        shell: /bin/bash
+        append: true
+        groups: sudo
+        state: present
+        generate_ssh_key: true
+        ssh_key_type: ed25519
+      register: result
+
+    - set_fact:
+        forestgrowth_key: "{{ result.ssh_public_key }}"
+
+
+
+
+- hosts: seedlings
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../vault.yml
+  vars:
+    ansible_become_pass: "{{ seed_password }}"
+    ansible_ssh_pass: "{{ seed_password }}"
+
+  tasks:
+    - name: Create seedlings users
+      user:
+        name: seed
+        password: "{{ seed_password_hash }}"
+        shell: /bin/bash
+        append: true
+        groups: sudo
+        state: present
+        generate_ssh_key: true
+        ssh_key_type: ed25519
+      register: result
+      ignore_unreachable: true
+
+    - name: Adding forsetgrowth key
+      authorized_key:
+        user: seed
+        state: present
+        key: "{{ hostvars['yggdrasil']['forestgrowth_key'] }}"
+      ignore_unreachable: true
+
+
+
+- hosts: desktops
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../vault.yml
+  vars:
+    ansible_become_pass: "{{ seed_password }}"
+    ansible_ssh_pass: "{{ seed_password }}"
+
+  tasks:
+    - name: Create desktop users
+      user:
+        name: squirrel
+        password: "{{ desktop_password_hash }}"
+        shell: /bin/bash
+        append: true
+        groups: sudo
+        state: present
+        generate_ssh_key: true
+        ssh_key_type: ed25519
+      register: result
+      ignore_unreachable: true
+
+
+
+- hosts: servers
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../vault.yml
+  vars:
+    ansible_become_pass: "{{ seed_password }}"
+    ansible_ssh_pass: "{{ seed_password }}"
+
+  tasks:
+    - name: Create server users
+      user:
+        name: server
+        password: "{{ server_password_hash }}"
+        shell: /bin/bash
+        append: true
+        groups: sudo
+        state: present
+        generate_ssh_key: true
+        ssh_key_type: ed25519
+      register: result
+      ignore_unreachable: true
+
+    - name: Adding desktop keys
+      authorized_key:
+        user: server
+        state: present
+        key: "{{ hostvars[item]['result']['ssh_public_key'] }}"
+      with_items: "{{ groups['desktops'] }}"
+      tags: desktops
+      ignore_unreachable: true
+
+
+- hosts: yggdrasil
+  gather_facts: false
+  become: true
+  vars_files:
+    - ../vault.yml
+  vars:
+    ansible_become_pass: "{{ forestgrowth_password }}"
+    ansible_ssh_pass: "{{ forestgrowth_password }}"
+
+  tasks:
+    - name: Adding desktop keys
+      authorized_key:
+        user: forestgrowth
+        state: present
+        key: "{{ hostvars[item]['result']['ssh_public_key'] }}"
+      with_items: "{{ groups['desktops'] }}"
+      tags: desktops
+      ignore_unreachable: true
+
+
+
+
+
+...

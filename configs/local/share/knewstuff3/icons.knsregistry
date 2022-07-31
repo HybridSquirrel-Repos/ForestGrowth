@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE khotnewstuff3>
+<hotnewstuffregistry>
+ <stuff category="132">
+  <name>Flat Remix ICON theme</name>
+  <providerid>https://api.kde-look.org/ocs/v1/</providerid>
+  <author>daniruiz06</author>
+  <homepage>https://store.kde.org/p/1012430</homepage>
+  <licence></licence>
+  <version>20220525</version>
+  <rating>86</rating>
+  <downloads>93669</downloads>
+  <installedfile>/home/squirrel/.local/share/icons/Flat-Remix-Blue-Light/*</installedfile>
+  <installedfile>/home/squirrel/.local/share/icons/Flat-Remix-Blue-Light-darkPanel/*</installedfile>
+  <installedfile>/home/squirrel/.local/share/icons/Flat-Remix-Blue-Dark/*</installedfile>
+  <id>1012430</id>
+  <releasedate>2022-05-25</releasedate>
+  <summary>&lt;h4>&lt;br />
+Web Page: &lt;strong>&lt;a href="https://drasite.com/flat-remix" target="_blank" rel="nofollow">drasite.com/flat-remix&lt;/a>&lt;/strong>&lt;br />
+&lt;img src="https://opendesktop.org/theme/flatui/img/email3.png" alt="email3" />  &lt;strong>&lt;a href="https://twitter.com/dani_ruiz24" target="_blank"...</summary>
+  <changelog></changelog>
+  <preview>https://images.pling.com/cache/100x100-0/img/00/00/36/00/71/1012430/c2d660c32158b217fca35d7de39b743e926cff650c83eaaf9cc689c3b060f9d4db20.png</preview>
+  <previewBig>https://images.pling.com/cache/770x540-0/img/00/00/36/00/71/1012430/c2d660c32158b217fca35d7de39b743e926cff650c83eaaf9cc689c3b060f9d4db20.png</previewBig>
+  <payload>https://dl3.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE2NTM0ODE4OTUiLCJvIjoiMSIsInMiOiI3NDUxM2E4YTk5Njc2ZTQ4NDRlMjg2MDkyZDllMmJlNWVhYWU1ZjAyOTYzMGE0ZWI2YmUyMDliMTUwYzRhNGZkYWQzNDkyN2U4Y2VkMDYyMzY3NjI0NzViYjA5OWIzMjM1OTcxMDRiMzIzNDIwZTVjNzQ3OWU5NjE1MzE2NzY3ZSIsInQiOjE2NTkxMjU3NzUsInN0ZnAiOm51bGwsInN0aXAiOiI5NC4yNTUuMTgzLjI0NiJ9.uo0I_iBcoDcQLMOFSSr6XDV-50StywRWFR8GReqIgQE/01-flat-remix-blue-20220525.tar.xz</payload>
+  <tags>unix,kde,gnome,xfce,lxde,cinnamon,mate,lxqt,deepin,elementary,budgie,flat,dark,linux,gplv3,foldes,material,multicolor,icon-theme,original-product</tags>
+  <status>installed</status>
+ </stuff>
+</hotnewstuffregistry>

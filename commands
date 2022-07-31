@@ -1,0 +1,76 @@
+ansible-inventory -i /etc/ansible/oldhosts -y --list > hosts.yml
+sudo ansible-config init --disabled -t all > ansible.cfg
+
+
+
+use only ipv6 ufw block ipv6 temporarly
+allow only some ips on some ports
+
+
+sudo apt install kde-plasma-desktop
+sudo update-initramfs -u
+
+sudo apt autoclean
+sudo apt autoremove
+
+sudo ubuntu-drivers install
+tlp tlp-rdw
+
+change DNS to cloud flare
+fancy bash promt
+sudo apt purge snapd
+
+apps:
+
+
+estonian id card reader
+
+
+doas 
+Ranger -
+neofetch -
+timeshift -
+gitlabrunner
+nala -
+bottom -
+onlyoffice -
+brave - 
+obsidian -
+discord -
+violet UML Editor
+jetbrains toolbox -
+docker -
+docker-compose -
+gcc -
+.net-core -
+jetbrains nerd fort
+xclip -
+luanrvim -
+neovim -
+makefiles -
+
+https://docs.velociraptor.app/docs/overview/
+https://www.geeksforgeeks.org/intrusion-detection-system-ids/
+Snort
+Zeek
+OSSEC
+Suricata
+Security Onion
+chkrootkit
+rkhunter
+Samhain
+AIDE
+Logwatch
+Tripwire
+Sagan
+Wazuh
+RustDesk
+
+
+
+disable ipv4 use only ipv6
+firewall port for spesfic ips
+
+vlc vs mpv
+ffmpeg
+youtube-dl

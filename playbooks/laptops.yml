@@ -1,0 +1,28 @@
+- hosts: laptops
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../vault.yml
+  vars:
+    become_user: root
+    ansible_become_pass: "{{ seed_password }}"
+
+  tasks:
+
+    - name: Adding config files
+      copy:
+        src: /etc/ansible/configs/kde/
+        dest: /home/squirrel/.kde/
+        directory_mode:
+
+    - copy:
+        src: /etc/ansible/configs/local/
+        dest: /home/squirrel/.local/
+        directory_mode:
+
+    - copy:
+        src: /etc/ansible/configs/sddm.conf
+        dest: /etc/sddm.conf
+
+    - name: Rebooting
+      reboot:
