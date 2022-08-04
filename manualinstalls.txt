@@ -1,0 +1,43 @@
+
+OnlyOffice
+Obsidian
+Jetbrains toolbox
+.net core
+rust
+brave
+timeshift
+nala
+gitlabrunner
+jetbrains nerd font
+lunarvim
+estonian id card reader
+discord
+
+
+https://docs.velociraptor.app/docs/overview/
+https://www.geeksforgeeks.org/intrusion-detection-system-ids/
+Snort
+Zeek
+OSSEC
+Suricata
+Security Onion
+chkrootkit
+rkhunter
+Samhain
+AIDE
+Logwatch
+Tripwire
+Sagan
+Wazuh
+RustDesk
+
+
+configre:
+change dns to cloud flare
+disable and use ipv6, change firewall for that aswell
+allow spesific ips for port 22 in the firewall
+
+maybe install:
+mpv
+ffmpeg
+youtube-dl

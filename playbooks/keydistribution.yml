@@ -62,7 +62,7 @@
 
 
 
-- hosts: desktops
+- hosts: clients
   gather_facts: false
   become: true
   vars_files:
@@ -72,7 +72,7 @@
     ansible_ssh_pass: "{{ seed_password }}"
 
   tasks:
-    - name: Create desktop users
+    - name: Create client users
       user:
         name: squirrel
         password: "{{ desktop_password_hash }}"
@@ -84,6 +84,9 @@
         ssh_key_type: ed25519
       register: result
       ignore_unreachable: true
+
+    - set_fact:
+        client_key: "{{ result.ssh_public_key }}"
 
 
 
@@ -110,15 +113,13 @@
       register: result
       ignore_unreachable: true
 
-    - name: Adding desktop keys
+    - name: Adding clients keys
       authorized_key:
         user: server
         state: present
-        key: "{{ hostvars[item]['result']['ssh_public_key'] }}"
-      with_items: "{{ groups['desktops'] }}"
-      tags: desktops
+        key: "{{ hostvars[item]['client_key'] }}"
+      with_items: "{{ groups['clients'] }}"
       ignore_unreachable: true
-
 
 - hosts: yggdrasil
   gather_facts: false
@@ -134,8 +135,8 @@
       authorized_key:
         user: forestgrowth
         state: present
-        key: "{{ hostvars[item]['result']['ssh_public_key'] }}"
-      with_items: "{{ groups['desktops'] }}"
+        key: "{{ hostvars[item]['client_key'] }}"
+      with_items: "{{ groups['clients'] }}"
       tags: desktops
       ignore_unreachable: true
 

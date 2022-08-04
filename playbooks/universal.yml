@@ -7,98 +7,43 @@
     ansible_become_pass: "{{ seed_password }}"
 
   tasks:
-    - name: Updateing and Upgrading
-      shell: "sudo apt update && sudo apt -y upgrade"
-
+    
     - name: Installing utils
       apt:
-        name: "{{ item }}"
+        name: "['ca-certificates', 'curl', 'gnupg', 'lsb-release', 
+          'net-tools', 'apt-transport-https', 'make', 'gcc', 'g++', 'xclip']"
         state: present
         update_cache: true
-      with_items:
-        - ca-certificates
-        - curl
-        - gnupg
-        - lsb-release
-        - net-tools
-        - apt-transport-https
-        - make
-        - gcc
-        - g++
 
-    - name: Installing ranger
+    - name: Installing applications
       apt:
-        name: ranger
+        name: "['ranger', 'neofetch']"
         state: present
         update_cache: true
+ 
+    - name: Installing bottom
+      get_url:
+        url: https://github.com/ClementTsang/bottom/releases/download/0.6.8/bottom_0.6.8_amd64.deb
+        dest: /home/seed/
 
-    - name: Installing neofetch
-      apt:
-        name: neofetch
-        state: present
-        update_cache: true
-    - name: Installing xclip
-      apt:
-        name: xclip
-        state: present
-        update_cache: true
-    - name: Getting nala repo
-      shell: "{{ item }}"
-      with_items:
-        - echo "deb https://deb.volian.org/volian/ scar main" | sudo tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list
-        - wget -qO - https://deb.volian.org/volian/scar.key | sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
+    - apt:
+        deb: bottom_0.6.8_amd64.deb
 
-    - name: Installing nala
-      apt:
-        name: nala
-        state: present
-        update_cache: true
-      ignore_errors: true
+    - file:
+        state: absent
+        path: bottom_0.6.8_amd64.deb
 
-    - name: Installing bottom aarch64
-      shell: "{{ item }}"
-      when: ansible_architecture == "aarch64"
-      with_items:
-        - curl -LO https://github.com/ClementTsang/bottom/releases/download/nightly/bottom_aarch64-unknown-linux-gnu.deb
-        - sudo dpkg -i bottom_aarch64-unknown-linux-gnu.deb
-        - rm bottom_aarch64-unknown-linux-gnu.deb
+    - name: Installing neovim
+      get_url:
+        url: https://github.com/neovim/neovim/releases/download/v0.7.2/nvim-linux64.deb
+        dest: /home/seed/
 
-    - name: Installing bottom x86_64
-      shell: "{{ item }}"
-      when: ansible_architecture == "x86_64"
-      with_items:
-        - curl -LO https://github.com/ClementTsang/bottom/releases/download/0.6.8/bottom_0.6.8_amd64.deb
-        - sudo dpkg -i bottom_0.6.8_amd64.deb
-        - rm bottom_0.6.8_amd64.deb
-    - name: Installing docker gpg
-      shell: "{{ item }}"
-      with_items:
-        - sudo mkdir -p /etc/apt/keyrings
-        - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
-        - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    - apt:
+        deb: /home/seed/nvim-linux64.deb
 
-    - name: Installing docker
-      apt:
-        name: "{{ item }}"
-        state: present
-        update_cache: true
-      with_items:
-        - docker-ce
-        - docker-ce-cli
-        - containerd.io
-        - docker-compose-plugin
-
-    - name: Installing neovim for aarch64 # Does not exist currently
-      shell: "echo 'Nvim does not exist'"
-      when: ansible_architecture == "aarch64"
-
-    - name: Installing neovim for x86_64
-      shell: "{{ item }}"
-      when: ansible_architecture == "x86_64"
-      with_items:
-        - curl -LO https://github.com/neovim/neovim/releases/download/v0.7.2/nvim-linux64.deb
-        - sudo apt install ./nvim-linux64.deb
-        - rm nvim-linux64.deb
+    - file:
+        state: absent
+        path: /home/seed/nvim-linux64.deb
 
     - name: Disable hibernation
       command: "systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target"
@@ -111,55 +56,3 @@
 
     - name: Intalling drivers
       shell: "sudo ubuntu-drivers install"
-      when: ansible_architecture == "x86_64"
-
-    - name: Rebooting
-      reboot:
-
-- hosts: clients
-  gather_facts: true
-  become: true
-  vars_files:
-    - ../vault.yml
-  vars:
-    become_user: root
-    ansible_become_pass: "{{ seed_password }}"
-
-  tasks:
-
-    - name: Changing to server directory
-      shell: "cd ../squirrel/"
-      when: ansible_architecture == "x86_64"
-
-    - name: Downloading install script for lunarvim
-      shell: "curl -O https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh"
-      when: ansible_architecture == "x86_64"
-
-    - name: Changing permission on install file
-      shell: "chmod +x install.sh "
-      when: ansible_architecture == "x86_64"
-
-
-
-- hosts: servers
-  gather_facts: true
-  become: true
-  vars_files:
-    - ../vault.yml
-  vars:
-    become_user: root
-    ansible_become_pass: "{{ seed_password }}"
-
-  tasks:
-
-    - name: Changing to server directory
-      shell: "cd ../server/"
-      when: ansible_architecture == "x86_64"
-
-    - name: Downloading install script for lunarvim
-      shell: "curl -O https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh"
-      when: ansible_architecture == "x86_64"
-
-    - name: Changing permission on install file
-      shell: "chmod +x install.sh "
-      when: ansible_architecture == "x86_64"
